@@ -72,7 +72,7 @@ int SuperTile::getTileSetTextureID()
 {
     return m_tileSetTexture->getId();
 }
-sf::Vector2i SuperTile::getTilePositon()
+sf::Vector2i SuperTile::getTilePosition()
 {
     return m_tilePosition;
 }

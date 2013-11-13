@@ -58,6 +58,15 @@ void Editeur::update(sf::Time elapseTime)
             }
 
         }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+        {
+            m_map.save("testMap");
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::L))
+        {
+            m_map.deleteMap();
+            m_map.load("testMap");
+        }
     }
 
 

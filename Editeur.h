@@ -8,9 +8,6 @@
 #include <sstream>
 #include <string>
 
-#include "Tile.h"
-#include "TextureTileSet.h"
-#include "Map.h"
 #include "WidgetMenu.h"
 #include "WidgetSystem.h"
 #include "WidgetWindowNewMap.h"

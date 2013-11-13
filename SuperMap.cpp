@@ -4,6 +4,7 @@ SuperMap::SuperMap():
     m_nbrTexture(5),
     m_mapNbrTile(sf::Vector2i(0,0)),
     m_position(sf::Vector2f(0,0)),
+    m_isMapBuild(false),
     m_startPointBuild(false)
 {
     std::cout<<"IN Ctor SUPER MAP"<<std::endl;
@@ -17,6 +18,7 @@ SuperMap::SuperMap(sf::Vector2i mapNbrTile,sf::Vector2f position):
     m_nbrTexture(5),
     m_mapNbrTile(mapNbrTile),
     m_position(position),
+    m_isMapBuild(false),
     m_startPointBuild(false)
 {
     std::cout<<"IN Ctor SUPER MAP"<<std::endl;
@@ -45,6 +47,7 @@ void SuperMap::build(sf::Vector2i mapNbrTile, sf::Vector2f position)
             m_tabMap[i][j]->setOrigin(sf::Vector2f(m_tabMap[i][j]->getOrigin().x+(m_tileSetTexture[m_tabMap[i][j]->getTileSetTextureID()].getTileSize().x/2),
                                                    m_tabMap[i][j]->getOrigin().y+(m_tileSetTexture[m_tabMap[i][j]->getTileSetTextureID()].getTileSize().y/2)));
             m_tabMap[i][j]->setMapPosition(m_position);
+            m_isMapBuild = true;
 
 
         }
@@ -52,34 +55,206 @@ void SuperMap::build(sf::Vector2i mapNbrTile, sf::Vector2f position)
 
 }
 
-void SuperMap::draw(sf::RenderWindow *fenetre)
+void SuperMap::deleteMap()
 {
-    //DRAW -> tabMap
     for(int i = 0; i < m_mapNbrTile.x ; i++ )
     {
         for(int j = 0; j < m_mapNbrTile.y ; j++)
         {
-            fenetre->draw(*m_tabMap[i][j]);
-
+            delete m_tabMap[i][j];
+            m_tabMap[i][j] = 0 ;
         }
     }
-    //DRAW -> tabMonstre
     for(int i = 0; i < m_tabMonstre.size(); i++)
     {
-        if(m_tabMonstre[i] != 0)
-        {
-            fenetre->draw(*m_tabMonstre[i]);
-        }
-
+            delete m_tabMonstre[i];
+            m_tabMonstre[i] = 0 ;
     }
-
     if(m_startPointBuild == true)
     {
-        fenetre->draw(*m_startPlayerPoint);
+        delete m_startPlayerPoint;
+        m_startPlayerPoint = 0 ;
+        m_startPointBuild = false;
+    }
+}
+
+void SuperMap::draw(sf::RenderWindow *fenetre)
+{
+
+    if(m_isMapBuild = true)
+    {
+        //DRAW -> tabMap
+        for(int i = 0; i < m_mapNbrTile.x ; i++ )
+        {
+            for(int j = 0; j < m_mapNbrTile.y ; j++)
+            {
+                fenetre->draw(*m_tabMap[i][j]);
+
+            }
+        }
+        //DRAW -> tabMonstre
+        for(int i = 0; i < m_tabMonstre.size(); i++)
+        {
+            if(m_tabMonstre[i] != 0)
+            {
+                fenetre->draw(*m_tabMonstre[i]);
+            }
+
+        }
+        //DRAW -> Perso
+        if(m_startPointBuild == true)
+        {
+            fenetre->draw(*m_startPlayerPoint);
+        }
     }
 
 
 }
+void SuperMap::save(std::string nomMap)
+{
+    std::cout << "IN: SAVE" << std::endl;
+    std::string nomFichier("map/"+nomMap+".map");
+    std::ofstream monFlux(nomFichier.c_str());
+
+    if(monFlux)
+    {
+        std::cout << "IN: FLUX" << std::endl;
+        monFlux <<nomMap<<std::endl;
+        monFlux <<m_mapNbrTile.x<<" "<<m_mapNbrTile.y<<std::endl;
+
+        //Save TabMap
+        for(int i = 0; i < m_mapNbrTile.x ; i++)
+        {
+            for(int j = 0; j < m_mapNbrTile.y ; j++)
+            {
+                int tmpX = m_tabMap[i][j]->getId().x;
+                int tmpY = m_tabMap[i][j]->getId().y;
+                int tmpTextureID = m_tabMap[i][j]->getTileSetTextureID();
+
+                monFlux <<tmpX<<" "<<tmpY<<" "<<tmpTextureID<<" "<<m_tabMap[i][j]->getRotation()<<" ";
+            }
+            monFlux << std::endl;
+        }
+        std::cout << "IN: FLUX MAP OK" << std::endl;
+        //Save Enemie
+        int tmpNombreMonstre = m_tabMonstre.size();
+        monFlux <<tmpNombreMonstre<<std::endl;
+        for(int i = 0 ; i < tmpNombreMonstre ; i++)
+        {
+            int tmpX = m_tabMonstre[i]->getId().x;
+            int tmpY = m_tabMonstre[i]->getId().y;
+            int tmpPosX = m_tabMonstre[i]->getTilePosition().x;
+            int tmpPosY = m_tabMonstre[i]->getTilePosition().y;
+            int tmpTextureID = m_tabMonstre[i]->getTileSetTextureID();
+
+            monFlux <<tmpX<<" "<<tmpY<<" "<<tmpPosX<<" "<<tmpPosY<<" "<<tmpTextureID<<" "<<m_tabMonstre[i]->getRotation()<<" ";
+        }
+        monFlux << std::endl;
+        std::cout << "IN: FLUX MONSTRE OK" << std::endl;
+        //Save Perso
+        int tmpX = m_startPlayerPoint->getId().x;
+        int tmpY = m_startPlayerPoint->getId().y;
+        int tmpPosX = m_startPlayerPoint->getTilePosition().x;
+        int tmpPosY = m_startPlayerPoint->getTilePosition().y;
+        int tmpTextureID = m_startPlayerPoint->getTileSetTextureID();
+
+        monFlux <<tmpX<<" "<<tmpY<<" "<<tmpPosX<<" "<<tmpPosY<<" "<<tmpTextureID<<" "<<m_startPlayerPoint->getRotation()<<" ";
+        std::cout << "IN: FLUX PERSO OK" << std::endl;
+        //SAVE FIN
+    }
+    else
+    {
+        std::cout << "ERREUR: Impossible d'ouvrir le fichier." << std::endl;
+    }
+}
+void SuperMap::load(std::string nomMap)
+{
+    std::string monFichier("map/"+nomMap+".map");
+    std::ifstream monInFlux(monFichier.c_str());
+
+    if(monInFlux)
+    {
+      //L'ouverture s'est bien passee, on peut donc lire
+
+      std::string tmpTitre = "pas de titre";
+      int tmpMapNbrTileX = 0;
+      int tmpMapNbrTileY = 0;
+      int tmpTileIDx = 0;
+      int tmpTileIDy = 0;
+      int tmpTextureID = 0;
+      int tmpTilePositionX = 0;
+      int tmpTilePositionY = 0;
+      float tmpRotation = 0;
+
+      std::cout<<"In monInFlux"<<std::endl;
+      monInFlux >> tmpTitre;
+      monInFlux >> tmpMapNbrTileX;
+      monInFlux >> tmpMapNbrTileY;
+      m_mapNbrTile = sf::Vector2i(tmpMapNbrTileX,tmpMapNbrTileY);
+
+      std::cout<<tmpTitre<<std::endl;
+      std::cout<<tmpMapNbrTileX<<"/"<<tmpMapNbrTileY<<std::endl;
+      //LOAD MAP
+      for(int i = 0; i < m_mapNbrTile.x ; i++)
+      {
+            for(int j = 0; j < m_mapNbrTile.y ; j++)
+            {
+                monInFlux >> tmpTileIDx;
+                monInFlux >> tmpTileIDy;
+                monInFlux >> tmpTextureID;
+                monInFlux >> tmpRotation;
+                std::cout<<"TileMap["<<i<<"]["<<j<<"] ID : ["<<tmpTileIDx<<","<<tmpTileIDy<<" / texture : "<<tmpTextureID<<" / rotation : "<<tmpRotation<<std::endl;
+
+                m_tabMap[i][j] = new SuperTile(m_tileSetTexture[tmpTextureID],sf::Vector2i(i,j),sf::Vector2i(tmpTileIDx,tmpTileIDy));
+                m_tabMap[i][j]->setScale(sf::Vector2f(0.5,0.5));
+                m_tabMap[i][j]->setOrigin(sf::Vector2f(m_tabMap[i][j]->getOrigin().x+(m_tileSetTexture[m_tabMap[i][j]->getTileSetTextureID()].getTileSize().x/2),
+                                                       m_tabMap[i][j]->getOrigin().y+(m_tileSetTexture[m_tabMap[i][j]->getTileSetTextureID()].getTileSize().y/2)));
+                m_tabMap[i][j]->setRotation(tmpRotation);
+                m_tabMap[i][j]->setMapPosition(m_position);
+            }
+
+      }
+      //LOAD MONSTRE
+      int tmpTabMonstreSize = 0;
+      monInFlux >> tmpTabMonstreSize;
+      for(int i = 0 ; i < tmpTabMonstreSize ; i++)
+      {
+          monInFlux >> tmpTileIDx;
+          monInFlux >> tmpTileIDy;
+          monInFlux >> tmpTilePositionX;
+          monInFlux >> tmpTilePositionY;
+          monInFlux >> tmpTextureID;
+          monInFlux >> tmpRotation;
+          m_tabMonstre.push_back(new SuperTile(m_tileSetTexture[tmpTextureID],sf::Vector2i(tmpTilePositionX,tmpTilePositionY),sf::Vector2i(tmpTileIDx,tmpTileIDy)));
+          int tmp = m_tabMonstre.size();
+          m_tabMonstre[tmp-1]->setScale(sf::Vector2f(0.5,0.5));
+          m_tabMonstre[tmp-1]->setOrigin(sf::Vector2f(m_tabMonstre[tmp-1]->getOrigin().x+(m_tileSetTexture[m_tabMonstre[tmp-1]->getTileSetTextureID()].getTileSize().x/2),
+                                                      m_tabMonstre[tmp-1]->getOrigin().y+(m_tileSetTexture[m_tabMonstre[tmp-1]->getTileSetTextureID()].getTileSize().y/2)));
+          m_tabMonstre[tmp-1]->setMapPosition(m_position);
+          m_tabMonstre[tmp-1]->setRotation(tmpRotation);
+      }
+      //LOAD STARTING POINT
+      monInFlux >> tmpTileIDx;
+      monInFlux >> tmpTileIDy;
+      monInFlux >> tmpTilePositionX;
+      monInFlux >> tmpTilePositionY;
+      monInFlux >> tmpTextureID;
+      monInFlux >> tmpRotation;
+      m_startPlayerPoint = new SuperTile(m_tileSetTexture[tmpTextureID],sf::Vector2i(tmpTilePositionX,tmpTilePositionY),sf::Vector2i(tmpTileIDx,tmpTileIDy));
+      m_startPlayerPoint->setScale(sf::Vector2f(0.5,0.5));
+      m_startPlayerPoint->setOrigin(sf::Vector2f(m_startPlayerPoint->getOrigin().x+(m_tileSetTexture[m_startPlayerPoint->getTileSetTextureID()].getTileSize().x/2),
+                                               m_startPlayerPoint->getOrigin().y+(m_tileSetTexture[m_startPlayerPoint->getTileSetTextureID()].getTileSize().y/2)));
+      m_startPlayerPoint->setMapPosition(m_position);
+      m_startPlayerPoint->setRotation(tmpRotation);
+      m_startPointBuild = true;
+
+    }
+    else
+    {
+        std::cout << "ERREUR: Impossible d'ouvrir le fichier." << std::endl;
+    }
+}
+
 
 sf::Vector2i SuperMap::getMouseTilePosition(sf::Vector2i mouseLocalPosition)
 {
@@ -187,6 +362,17 @@ SuperMap::~SuperMap()
             m_tabMap[i][j] = 0 ;
         }
     }
+    for(int i = 0; i < m_tabMonstre.size(); i++)
+    {
+            delete m_tabMonstre[i];
+            m_tabMonstre[i] = 0 ;
+    }
+    if(m_startPointBuild == true)
+    {
+        delete m_startPlayerPoint;
+        m_startPlayerPoint = 0 ;
+    }
+
 }
 
 void SuperMap::triTableauDyn()

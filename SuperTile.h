@@ -43,7 +43,7 @@ class SuperTile : public sf::Sprite
 
         //Getter
         int getTileSetTextureID();
-        sf::Vector2i getTilePositon();
+        sf::Vector2i getTilePosition();
         sf::Vector2i getId();
         sf::Vector2f getMapOrigin();
 
