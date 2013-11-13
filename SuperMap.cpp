@@ -3,7 +3,8 @@
 SuperMap::SuperMap():
     m_nbrTexture(5),
     m_mapNbrTile(sf::Vector2i(0,0)),
-    m_position(sf::Vector2f(0,0))
+    m_position(sf::Vector2f(0,0)),
+    m_startPointBuild(false)
 {
     std::cout<<"IN Ctor SUPER MAP"<<std::endl;
     m_tileSetTexture[0].initTexture(0, "Mur", sf::Vector2i(96,96), sf::Vector2i(6,3), "images/TileSet/tileSet96x96Mur.png");
@@ -15,7 +16,8 @@ SuperMap::SuperMap():
 SuperMap::SuperMap(sf::Vector2i mapNbrTile,sf::Vector2f position):
     m_nbrTexture(5),
     m_mapNbrTile(mapNbrTile),
-    m_position(position)
+    m_position(position),
+    m_startPointBuild(false)
 {
     std::cout<<"IN Ctor SUPER MAP"<<std::endl;
     m_tileSetTexture[0].initTexture(0, "Mur", sf::Vector2i(96,96), sf::Vector2i(6,3), "images/TileSet/tileSet96x96Mur.png");
@@ -71,6 +73,12 @@ void SuperMap::draw(sf::RenderWindow *fenetre)
 
     }
 
+    if(m_startPointBuild == true)
+    {
+        fenetre->draw(*m_startPlayerPoint);
+    }
+
+
 }
 
 sf::Vector2i SuperMap::getMouseTilePosition(sf::Vector2i mouseLocalPosition)
@@ -99,7 +107,7 @@ void SuperMap::setGridPosition(sf::Vector2f positionMap)
     }
 }
 
-void SuperMap::setTile(sf::Vector2i tilePosition, SuperTile tile)
+void SuperMap::setTile(sf::Vector2i tilePosition, SuperTile tile, sf::Vector2i mouseLocalPosition)
 {
     int tmpTextureID = tile.getTileSetTextureID();
     //sur map
@@ -109,14 +117,61 @@ void SuperMap::setTile(sf::Vector2i tilePosition, SuperTile tile)
         m_tabMap[tilePosition.x][tilePosition.y]->setId(tile.getId());
         m_tabMap[tilePosition.x][tilePosition.y]->setRotation(tile.getRotation());
     }
-    //sur Perso
+    //sur Monstre
     if(tmpTextureID == 3)
     {
-        m_tabMonstre.push_back(new SuperTile(m_tileSetTexture[tmpTextureID],tilePosition,tile.getId()));
-        m_tabMonstre[m_tabMonstre.size()-1]->setScale(sf::Vector2f(0.5,0.5));
-        m_tabMonstre[m_tabMonstre.size()-1]->setOrigin(sf::Vector2f(m_tabMonstre[m_tabMonstre.size()-1]->getOrigin().x+(m_tileSetTexture[m_tabMonstre[m_tabMonstre.size()-1]->getTileSetTextureID()].getTileSize().x/2),
-                                                                    m_tabMonstre[m_tabMonstre.size()-1]->getOrigin().y+(m_tileSetTexture[m_tabMonstre[m_tabMonstre.size()-1]->getTileSetTextureID()].getTileSize().y/2)));
-        m_tabMonstre[m_tabMonstre.size()-1]->setMapPosition(m_position);
+        int tmpTabMonstreSize = m_tabMonstre.size();
+        bool monstreDelete = false;
+        for(int i = 0; i < tmpTabMonstreSize; i++)
+        {
+            if(m_tabMonstre[i]->getGlobalBounds().contains(mouseLocalPosition.x,mouseLocalPosition.y))
+            {
+                std::cout<<"Delete Monstre"<<std::endl;
+                delete m_tabMonstre[i];
+                m_tabMonstre[i] = 0;
+                triTableauDyn();
+                monstreDelete = true;
+
+            }
+        }
+        if(monstreDelete == false)
+        {
+            std::cout<<"Create Monstre"<<std::endl;
+            m_tabMonstre.push_back(new SuperTile(m_tileSetTexture[tmpTextureID],tilePosition,tile.getId()));
+            tmpTabMonstreSize = m_tabMonstre.size();
+            m_tabMonstre[tmpTabMonstreSize-1]->setScale(sf::Vector2f(0.5,0.5));
+            m_tabMonstre[tmpTabMonstreSize-1]->setOrigin(sf::Vector2f(m_tabMonstre[tmpTabMonstreSize-1]->getOrigin().x+(m_tileSetTexture[m_tabMonstre[tmpTabMonstreSize-1]->getTileSetTextureID()].getTileSize().x/2),
+                                                                      m_tabMonstre[tmpTabMonstreSize-1]->getOrigin().y+(m_tileSetTexture[m_tabMonstre[tmpTabMonstreSize-1]->getTileSetTextureID()].getTileSize().y/2)));
+            m_tabMonstre[tmpTabMonstreSize-1]->setMapPosition(m_position);
+        }
+
+    }
+    //Sur Perso
+    if(tmpTextureID == 4)
+    {
+        bool persoDelete = false;
+
+        if(m_startPointBuild == true)
+        {
+            std::cout<<"Delete Starting Point"<<std::endl;
+            delete m_startPlayerPoint;
+            m_startPlayerPoint = 0;
+            persoDelete = true;
+            m_startPointBuild = false;
+        }
+
+        if(persoDelete == false)
+        {
+            std::cout<<"Create Starting Point"<<std::endl;
+            m_startPlayerPoint = new SuperTile(m_tileSetTexture[tmpTextureID],tilePosition,tile.getId());
+
+            m_startPlayerPoint->setScale(sf::Vector2f(0.5,0.5));
+            m_startPlayerPoint->setOrigin(sf::Vector2f(m_startPlayerPoint->getOrigin().x+(m_tileSetTexture[m_startPlayerPoint->getTileSetTextureID()].getTileSize().x/2),
+                                                       m_startPlayerPoint->getOrigin().y+(m_tileSetTexture[m_startPlayerPoint->getTileSetTextureID()].getTileSize().y/2)));
+            m_startPlayerPoint->setMapPosition(m_position);
+            m_startPointBuild = true;
+        }
+
     }
 
 

@@ -168,7 +168,7 @@ void WidgetPalette::update(sf::Vector2i mouseLocalPosition, sf::Time elapseTime)
             }
         }
     }
-    if(elapseTime > m_upddateTime+sf::milliseconds(300))
+    if(elapseTime > m_upddateTime+sf::milliseconds(10))
     {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {

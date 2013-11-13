@@ -33,7 +33,7 @@ class SuperMap
 
         void setGridPosition(sf::Vector2f positionMap);
 
-        void setTile(sf::Vector2i tilePosition, SuperTile tile);
+        void setTile(sf::Vector2i tilePosition, SuperTile tile, sf::Vector2i mouseLocalPosition);
 
 
         virtual ~SuperMap();
@@ -47,6 +47,7 @@ class SuperMap
         TileSetTexture m_tileSetTexture[5];
 
         SuperTile *m_tabMap[100][100];
+        bool m_startPointBuild;
         SuperTile *m_startPlayerPoint;
         std::vector<SuperTile*> m_tabMonstre;
 

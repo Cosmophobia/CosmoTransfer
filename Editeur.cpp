@@ -53,7 +53,7 @@ void Editeur::update(sf::Time elapseTime)
         {
             if (m_map.getMouseTilePosition(sf::Mouse::getPosition(*m_fenetre)).x != -1)
             {
-               m_map.setTile(m_map.getMouseTilePosition(sf::Mouse::getPosition(*m_fenetre)),m_widgetPalette.getSelectTile());
+               m_map.setTile(m_map.getMouseTilePosition(sf::Mouse::getPosition(*m_fenetre)),m_widgetPalette.getSelectTile(),sf::Mouse::getPosition(*m_fenetre));
                m_updateTime = elapseTime;
             }
 
