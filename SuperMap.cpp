@@ -102,14 +102,14 @@ void SuperMap::setGridPosition(sf::Vector2f positionMap)
 void SuperMap::setTile(sf::Vector2i tilePosition, SuperTile tile)
 {
     int tmpTextureID = tile.getTileSetTextureID();
-
+    //sur map
     if(tmpTextureID == 0 || tmpTextureID == 1 || tmpTextureID == 2)
     {
         m_tabMap[tilePosition.x][tilePosition.y]->setTileSetTexture(m_tileSetTexture[tmpTextureID]);
         m_tabMap[tilePosition.x][tilePosition.y]->setId(tile.getId());
         m_tabMap[tilePosition.x][tilePosition.y]->setRotation(tile.getRotation());
     }
-
+    //sur Perso
     if(tmpTextureID == 3)
     {
         m_tabMonstre.push_back(new SuperTile(m_tileSetTexture[tmpTextureID],tilePosition,tile.getId()));
