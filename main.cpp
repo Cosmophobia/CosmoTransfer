@@ -1,9 +1,8 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Launcher.h"
-#include "Editor.h"
 #include "Editeur.h"
-#include "GameScreen.h"
+
 
 int main()
 {
@@ -11,10 +10,8 @@ int main()
     std::string gameState("LAUNCHER");
     bool appOn = true;
 
-    Editor *editor;
     Editeur *editeur;
     Launcher *launcher;
-    GameScreen *gameScreen;
 
     sf::Event evenement;
 
