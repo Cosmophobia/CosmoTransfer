@@ -44,10 +44,10 @@ void Editeur::draw()
 
 }
 
-void Editeur::update(sf::Time elapseTime)
+void Editeur::update(sf::Event evenement, sf::Time elapseTime)
 {
     m_widgetMenu.update(sf::Mouse::getPosition(*m_fenetre), elapseTime);
-    if (elapseTime > m_updateTime+sf::milliseconds(300))
+    if (elapseTime > m_updateTime+sf::milliseconds(100))
     {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
@@ -56,16 +56,69 @@ void Editeur::update(sf::Time elapseTime)
                m_map.setTile(m_map.getMouseTilePosition(sf::Mouse::getPosition(*m_fenetre)),m_widgetPalette.getSelectTile(),sf::Mouse::getPosition(*m_fenetre));
                m_updateTime = elapseTime;
             }
-
+            if (m_widgetNewMap.getButtonOnMouseLocation(sf::Mouse::getPosition(*m_fenetre)) != -1)
+            {
+                if(m_widgetNewMap.getButtonOnMouseLocation(sf::Mouse::getPosition(*m_fenetre)) == 3)
+                {
+                    m_map.deleteMap();
+                    m_map.build(m_widgetNewMap.getSelectedMapSize(),sf::Vector2f (200,200));
+                    m_updateTime = elapseTime;
+                }
+            }
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
         {
             m_map.save("testMap");
+            m_updateTime = elapseTime;
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::L))
         {
             m_map.deleteMap();
             m_map.load("testMap");
+            m_updateTime = elapseTime;
+        }
+    }
+
+}
+
+void Editeur::keyboardAndMouseEvent(sf::Event evenement, sf::Time elapseTime)
+{
+    if(elapseTime > m_updateTime+sf::milliseconds(300))
+    {
+        if (evenement.type == sf::Event::MouseWheelMoved)
+        {
+           int tmpDelta = evenement.mouseWheel.delta;
+           std::cout<<"tmp delta ="<<tmpDelta<<std::endl;
+           if(tmpDelta > 0)
+           {
+                m_map.scaleMap("ZOOM+",0.5f);
+           }
+           if(tmpDelta < 0)
+           {
+                m_map.scaleMap("ZOOM-",0.5f);
+           }
+           m_updateTime = elapseTime;
+        }
+        float tmpStep = 50;
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+        {
+            m_map.scrollMap("HAUT",tmpStep);
+            m_updateTime = elapseTime;
+        }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+        {
+            m_map.scrollMap("BAS",tmpStep);
+            m_updateTime = elapseTime;
+        }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+        {
+            m_map.scrollMap("GAUCHE",tmpStep);
+            m_updateTime = elapseTime;
+        }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+        {
+            m_map.scrollMap("DROITE",tmpStep);
+            m_updateTime = elapseTime;
         }
     }
 

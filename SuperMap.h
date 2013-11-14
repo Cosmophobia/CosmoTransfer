@@ -31,6 +31,9 @@ class SuperMap
         void save(std::string nomMap);
         void load(std::string nomMap);
 
+        void scrollMap(std::string direction,float step);
+        void scaleMap(std::string zoom, float step);
+
         sf::Vector2i getMouseTilePosition(sf::Vector2i mouseLocalPosition);
 
         void setGridPosition(sf::Vector2f positionMap);

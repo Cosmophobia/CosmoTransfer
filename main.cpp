@@ -80,7 +80,7 @@ int main()
                 while (gameState == "EDITOR")
                 {
                     //update
-                    editeur->update(clock.getElapsedTime());
+                    editeur->update(evenement,clock.getElapsedTime());
                     //editor->update(evenement);
 
                     while (fenetre->pollEvent(evenement))
@@ -91,6 +91,7 @@ int main()
                             std::cout<<"Close to launcher"<<std::endl;
                             gameState = "LAUNCHER";
                         }
+                        editeur->keyboardAndMouseEvent(evenement,clock.getElapsedTime());
                             //editor->eventMouse(evenement, clock.getElapsedTime());
                             //editor->eventClavier(evenement, clock.getElapsedTime());
 

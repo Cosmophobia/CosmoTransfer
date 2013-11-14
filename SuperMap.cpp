@@ -54,7 +54,6 @@ void SuperMap::build(sf::Vector2i mapNbrTile, sf::Vector2f position)
     }
 
 }
-
 void SuperMap::deleteMap()
 {
     for(int i = 0; i < m_mapNbrTile.x ; i++ )
@@ -77,7 +76,6 @@ void SuperMap::deleteMap()
         m_startPointBuild = false;
     }
 }
-
 void SuperMap::draw(sf::RenderWindow *fenetre)
 {
 
@@ -256,6 +254,134 @@ void SuperMap::load(std::string nomMap)
 }
 
 
+void SuperMap::scrollMap(std::string direction,float step)
+{
+    if(direction == "HAUT")
+    {
+        m_position = m_position + sf::Vector2f(0,-step);
+        for(int i = 0 ; i < m_mapNbrTile.x ; i++)
+        {
+            for(int j = 0 ; j < m_mapNbrTile.y ; j++)
+            {
+                m_tabMap[i][j]->setMapPosition(m_position);
+            }
+        }
+        for(int i = 0 ; i < m_tabMonstre.size() ; i++)
+        {
+            m_tabMonstre[i]->setMapPosition(m_position);
+        }
+        if(m_startPointBuild == true)
+        {
+            m_startPlayerPoint->setMapPosition(m_position);
+        }
+    }
+    else if(direction == "BAS")
+    {
+        m_position = m_position + sf::Vector2f(0,step);
+        for(int i = 0 ; i < m_mapNbrTile.x ; i++)
+        {
+            for(int j = 0 ; j < m_mapNbrTile.y ; j++)
+            {
+                m_tabMap[i][j]->setMapPosition(m_position);
+            }
+        }
+        for(int i = 0 ; i < m_tabMonstre.size() ; i++)
+        {
+            m_tabMonstre[i]->setMapPosition(m_position);
+        }
+        if(m_startPointBuild == true)
+        {
+            m_startPlayerPoint->setMapPosition(m_position);
+        }
+    }
+    else if(direction == "GAUCHE")
+    {
+        m_position = m_position + sf::Vector2f(-step,0);
+        for(int i = 0 ; i < m_mapNbrTile.x ; i++)
+        {
+            for(int j = 0 ; j < m_mapNbrTile.y ; j++)
+            {
+                m_tabMap[i][j]->setMapPosition(m_position);
+            }
+        }
+        for(int i = 0 ; i < m_tabMonstre.size() ; i++)
+        {
+            m_tabMonstre[i]->setMapPosition(m_position);
+        }
+        if(m_startPointBuild == true)
+        {
+            m_startPlayerPoint->setMapPosition(m_position);
+        }
+    }
+    else if(direction == "DROITE")
+    {
+        m_position = m_position + sf::Vector2f(step,0);
+        for(int i = 0 ; i < m_mapNbrTile.x ; i++)
+        {
+            for(int j = 0 ; j < m_mapNbrTile.y ; j++)
+            {
+                m_tabMap[i][j]->setMapPosition(m_position);
+            }
+        }
+        for(int i = 0 ; i < m_tabMonstre.size() ; i++)
+        {
+            m_tabMonstre[i]->setMapPosition(m_position);
+        }
+        if(m_startPointBuild == true)
+        {
+            m_startPlayerPoint->setMapPosition(m_position);
+        }
+    }
+}
+void SuperMap::scaleMap(std::string zoom, float step)
+{
+    //int tmpDelta = evenement.mouseWheel.delta;
+    if(zoom == "ZOOM+")
+    {
+        for(int i = 0 ; i < m_mapNbrTile.x ; i++)
+        {
+            for(int j = 0 ; j < m_mapNbrTile.y ; j++)
+            {
+                m_tabMap[i][j]->scale(sf::Vector2f(1+step,1+step));
+                m_tabMap[i][j]->setMapPosition(m_position);
+            }
+        }
+        for(int i = 0 ; i < m_tabMonstre.size() ; i++)
+        {
+            m_tabMonstre[i]->scale(sf::Vector2f(1+step,1+step));
+            m_tabMonstre[i]->setMapPosition(m_position);
+        }
+        if(m_startPointBuild == true)
+        {
+            m_startPlayerPoint->scale(sf::Vector2f(1+step,1+step));
+            m_startPlayerPoint->setMapPosition(m_position);
+        }
+    }
+    if(zoom == "ZOOM-")
+    {
+        for(int i = 0 ; i < m_mapNbrTile.x ; i++)
+        {
+            for(int j = 0 ; j < m_mapNbrTile.y ; j++)
+            {
+                m_tabMap[i][j]->scale(sf::Vector2f(1-step,1-step));
+                m_tabMap[i][j]->setMapPosition(m_position);
+            }
+        }
+        for(int i = 0 ; i < m_tabMonstre.size() ; i++)
+        {
+            m_tabMonstre[i]->scale(sf::Vector2f(1-step,1-step));
+            m_tabMonstre[i]->setMapPosition(m_position);
+        }
+        if(m_startPointBuild == true)
+        {
+            m_startPlayerPoint->scale(sf::Vector2f(1-step,1-step));
+            m_startPlayerPoint->setMapPosition(m_position);
+        }
+    }
+}
+
+
+
 sf::Vector2i SuperMap::getMouseTilePosition(sf::Vector2i mouseLocalPosition)
 {
     for(int i = 0; i < m_mapNbrTile.x ; i++)
@@ -314,7 +440,7 @@ void SuperMap::setTile(sf::Vector2i tilePosition, SuperTile tile, sf::Vector2i m
             std::cout<<"Create Monstre"<<std::endl;
             m_tabMonstre.push_back(new SuperTile(m_tileSetTexture[tmpTextureID],tilePosition,tile.getId()));
             tmpTabMonstreSize = m_tabMonstre.size();
-            m_tabMonstre[tmpTabMonstreSize-1]->setScale(sf::Vector2f(0.5,0.5));
+            m_tabMonstre[tmpTabMonstreSize-1]->setScale(m_tabMap[0][0]->getScale());
             m_tabMonstre[tmpTabMonstreSize-1]->setOrigin(sf::Vector2f(m_tabMonstre[tmpTabMonstreSize-1]->getOrigin().x+(m_tileSetTexture[m_tabMonstre[tmpTabMonstreSize-1]->getTileSetTextureID()].getTileSize().x/2),
                                                                       m_tabMonstre[tmpTabMonstreSize-1]->getOrigin().y+(m_tileSetTexture[m_tabMonstre[tmpTabMonstreSize-1]->getTileSetTextureID()].getTileSize().y/2)));
             m_tabMonstre[tmpTabMonstreSize-1]->setMapPosition(m_position);
@@ -340,7 +466,7 @@ void SuperMap::setTile(sf::Vector2i tilePosition, SuperTile tile, sf::Vector2i m
             std::cout<<"Create Starting Point"<<std::endl;
             m_startPlayerPoint = new SuperTile(m_tileSetTexture[tmpTextureID],tilePosition,tile.getId());
 
-            m_startPlayerPoint->setScale(sf::Vector2f(0.5,0.5));
+            m_startPlayerPoint->setScale(m_tabMap[0][0]->getScale());
             m_startPlayerPoint->setOrigin(sf::Vector2f(m_startPlayerPoint->getOrigin().x+(m_tileSetTexture[m_startPlayerPoint->getTileSetTextureID()].getTileSize().x/2),
                                                        m_startPlayerPoint->getOrigin().y+(m_tileSetTexture[m_startPlayerPoint->getTileSetTextureID()].getTileSize().y/2)));
             m_startPlayerPoint->setMapPosition(m_position);

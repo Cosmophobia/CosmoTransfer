@@ -21,7 +21,8 @@ class Editeur
 
         void draw();
 
-        void update(sf::Time elapseTime);
+        void update(sf::Event evenement, sf::Time elapseTime);
+        void keyboardAndMouseEvent(sf::Event evenement, sf::Time elapseTime);
 
         virtual ~Editeur();
     protected:

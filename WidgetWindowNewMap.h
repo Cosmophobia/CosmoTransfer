@@ -18,6 +18,9 @@ class WidgetWindowNewMap
 
         void setWidgetPosition(sf::Vector2f step = sf::Vector2f (0,0));
 
+        int getButtonOnMouseLocation(sf::Vector2i mouseLocalPosition);
+        sf::Vector2i getSelectedMapSize();
+
         virtual ~WidgetWindowNewMap();
     protected:
     private:
