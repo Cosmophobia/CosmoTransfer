@@ -1,7 +1,6 @@
 #include "GameScreen.h"
 
 GameScreen::GameScreen(sf::RenderWindow *fenetre)
-
 {
     // CREER FENETRE AVEC FOND
     std::cout<<"In GAME"<<std::endl;
@@ -19,7 +18,9 @@ GameScreen::GameScreen(sf::RenderWindow *fenetre)
 
     // CREER MAP
     m_gameMapOrigine = sf::Vector2f(75.f,75.f);
-    m_gameMap.build(sf::Vector2i(10,10), m_gameMapOrigine);
+
+    m_gameMap.load("testMap");
+    m_gameMap.setMapPosition(sf::Vector2f (150,150));
 
     //COSMONAUTE
   //  m_cosmonaute.setCentreOrigin();
@@ -47,21 +48,7 @@ void GameScreen::wheelEvent(sf::Event evenement)
 
 void GameScreen::eventClavier(sf::Event evenement)
 {
-			if (evenement.type == sf::Event::KeyPressed)
-			{
-				switch (evenement.key.code)
-				{
-					case sf::Keyboard::Z:		m_cosmonaute.playWalkAnimation();
-                                                m_cosmonaute.setDestination(sf::Vector2f(0.f,-1.f)); break;
-                    case sf::Keyboard::D:       m_cosmonaute.playWalkAnimation();
-                                                m_cosmonaute.setDestination(sf::Vector2f(1.f,0.f)); break;
-                    case sf::Keyboard::S:       m_cosmonaute.playWalkAnimation();
-                                                m_cosmonaute.setDestination(sf::Vector2f(0.f,1.f)); break;
-                    case sf::Keyboard::Q:       m_cosmonaute.playWalkAnimation();
-                                                m_cosmonaute.setDestination(sf::Vector2f(-1.f,0.f)); break;
-				}
-			}
-
+   m_gameMap.KeyboardEvent(evenement);
 }
 
 void GameScreen::draw(sf::Time elapsedTime)
@@ -69,8 +56,8 @@ void GameScreen::draw(sf::Time elapsedTime)
     m_fenetreGame->resetGLStates();
     m_fenetreGame->clear();
     m_fenetreGame->draw(m_imgFondGame);
-    m_gameMap.draw(m_fenetreGame);
-    m_cosmonaute.draw(m_fenetreGame, elapsedTime);
+    m_gameMap.draw(m_fenetreGame, elapsedTime);
+    //m_cosmonaute.draw(m_fenetreGame, elapsedTime);
     m_fenetreGame->display();
 }
 
