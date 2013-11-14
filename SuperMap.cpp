@@ -1,5 +1,6 @@
 #include "SuperMap.h"
 
+//CONSTRUCTEUR
 SuperMap::SuperMap():
     m_nbrTexture(5),
     m_mapNbrTile(sf::Vector2i(0,0)),
@@ -29,8 +30,7 @@ SuperMap::SuperMap(sf::Vector2i mapNbrTile,sf::Vector2f position):
     m_tileSetTexture[4].initTexture(4, "Meta", sf::Vector2i(96,96), sf::Vector2i(2,2), "images/TileSet/tileSet96x96Meta.png");
 }
 
-
-
+//INITIALISATION
 void SuperMap::build(sf::Vector2i mapNbrTile, sf::Vector2f position)
 {
     std::cout<<"IN BUILD SUPER MAP"<<std::endl;
@@ -75,6 +75,8 @@ void SuperMap::deleteMap()
         m_startPointBuild = false;
     }
 }
+
+//ACTION
 void SuperMap::draw(sf::RenderWindow *fenetre)
 {
 
@@ -107,6 +109,8 @@ void SuperMap::draw(sf::RenderWindow *fenetre)
 
 
 }
+
+//SYSTEM
 void SuperMap::save(std::string nomMap)
 {
     std::cout << "IN: SAVE" << std::endl;
@@ -252,7 +256,7 @@ void SuperMap::load(std::string nomMap)
     }
 }
 
-
+//EVENT
 void SuperMap::scrollMap(std::string direction,float step)
 {
     if(direction == "HAUT")
@@ -379,8 +383,7 @@ void SuperMap::scaleMap(std::string zoom, float step)
     }
 }
 
-
-
+//GETTER
 sf::Vector2i SuperMap::getMouseTilePosition(sf::Vector2i mouseLocalPosition)
 {
     for(int i = 0; i < m_mapNbrTile.x ; i++)
@@ -396,6 +399,7 @@ sf::Vector2i SuperMap::getMouseTilePosition(sf::Vector2i mouseLocalPosition)
     return sf::Vector2i(-1,-1);
 }
 
+//SETTER
 void SuperMap::setGridPosition(sf::Vector2f positionMap)
 {
     for(int i = 0; i < m_mapNbrTile.x ; i++)
@@ -406,7 +410,6 @@ void SuperMap::setGridPosition(sf::Vector2f positionMap)
         }
     }
 }
-
 void SuperMap::setTile(sf::Vector2i tilePosition, SuperTile tile, sf::Vector2i mouseLocalPosition)
 {
     int tmpTextureID = tile.getTileSetTextureID();
@@ -417,11 +420,8 @@ void SuperMap::setTile(sf::Vector2i tilePosition, SuperTile tile, sf::Vector2i m
         m_tabMap[tilePosition.x][tilePosition.y]->setId(tile.getId());
         m_tabMap[tilePosition.x][tilePosition.y]->setRotation(tile.getRotation());
     }
-<<<<<<< HEAD
+
     //sur Monstre
-=======
-    //sur Perso
->>>>>>> origin/D
     if(tmpTextureID == 3)
     {
         int tmpTabMonstreSize = m_tabMonstre.size();
@@ -481,6 +481,7 @@ void SuperMap::setTile(sf::Vector2i tilePosition, SuperTile tile, sf::Vector2i m
 
 }
 
+//DESTRUCTEUR
 SuperMap::~SuperMap()
 {
     for(int i = 0; i < m_mapNbrTile.x ; i++ )
@@ -504,6 +505,7 @@ SuperMap::~SuperMap()
 
 }
 
+//PRIVATE
 void SuperMap::triTableauDyn()
 {
     std::cout<<"Enter triTab"<<std::endl;
