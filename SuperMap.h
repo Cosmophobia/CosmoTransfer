@@ -35,6 +35,8 @@ class SuperMap
 
         void setTile(sf::Vector2i tilePosition, SuperTile tile);
 
+        sf::Vector2f getMapPosition;
+
 
         virtual ~SuperMap();
     protected:

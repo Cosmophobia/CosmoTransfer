@@ -39,9 +39,8 @@ void SuperMap::build(sf::Vector2i mapNbrTile, sf::Vector2f position)
             //Map Tableau
             std::cout<<"IN BUILD TabMap "<<i<<" "<<j<<std::endl;
             m_tabMap[i][j] = new SuperTile(m_tileSetTexture[0],sf::Vector2i(i,j),sf::Vector2i(1,0));
-            m_tabMap[i][j]->setScale(sf::Vector2f(0.5,0.5));
-            m_tabMap[i][j]->setOrigin(sf::Vector2f(m_tabMap[i][j]->getOrigin().x+(m_tileSetTexture[m_tabMap[i][j]->getTileSetTextureID()].getTileSize().x/2),
-                                                   m_tabMap[i][j]->getOrigin().y+(m_tileSetTexture[m_tabMap[i][j]->getTileSetTextureID()].getTileSize().y/2)));
+            m_tabMap[i][j]->setScale(sf::Vector2f(1,1));
+            m_tabMap[i][j]->setCentreOrigin();
             m_tabMap[i][j]->setMapPosition(m_position);
 
 
@@ -102,14 +101,14 @@ void SuperMap::setGridPosition(sf::Vector2f positionMap)
 void SuperMap::setTile(sf::Vector2i tilePosition, SuperTile tile)
 {
     int tmpTextureID = tile.getTileSetTextureID();
-
+    //sur map
     if(tmpTextureID == 0 || tmpTextureID == 1 || tmpTextureID == 2)
     {
         m_tabMap[tilePosition.x][tilePosition.y]->setTileSetTexture(m_tileSetTexture[tmpTextureID]);
         m_tabMap[tilePosition.x][tilePosition.y]->setId(tile.getId());
         m_tabMap[tilePosition.x][tilePosition.y]->setRotation(tile.getRotation());
     }
-
+    //sur Perso
     if(tmpTextureID == 3)
     {
         m_tabMonstre.push_back(new SuperTile(m_tileSetTexture[tmpTextureID],tilePosition,tile.getId()));

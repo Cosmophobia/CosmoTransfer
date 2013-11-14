@@ -2,17 +2,19 @@
 #include <iostream>
 #include "Launcher.h"
 #include "Editeur.h"
+#include "GameScreen.h"
 
 
 int main()
 {
     //Déclaration VARIABLES
+    sf::Clock clock;
     std::string gameState("LAUNCHER");
     bool appOn = true;
 
     Editeur *editeur;
     Launcher *launcher;
-
+    GameScreen *gameScreen;
     sf::Event evenement;
 
     //initialisation fenetre
@@ -68,7 +70,6 @@ int main()
 
             //Mise En Place
             editeur = new Editeur(fenetre);
-            sf::Clock clock;
             sf::Time mouseEventTime(clock.getElapsedTime());
 
             //editor = new Editor(fenetre);
@@ -113,7 +114,7 @@ int main()
 
 
 
-        /*
+
                     //GAME
         if(gameState == "GAME")
         {
@@ -139,11 +140,11 @@ int main()
                         //evenement SOURIS
 
                         //evenement CLAVIER
-                        editor->eventClavier(evenement);
+                        gameScreen->eventClavier(evenement);
                     }
 
                     //Dessiner l'éditeur
-                    gameScreen->draw();
+                    gameScreen->draw(clock.getElapsedTime());
                 }
 
             //DESTRUCTION EDITEUR
@@ -152,7 +153,6 @@ int main()
             gameScreen = 0;
             std::cout<<"GameScreen Delete"<<std::endl;
         }
-        */
 
 
     }

@@ -1,7 +1,6 @@
 #ifndef EDITEUR_H
 #define EDITEUR_H
 
-#include <SFGUI/SFGUI.hpp>
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <fstream>
