@@ -26,7 +26,7 @@ void SuperTile::setIdGridPosition(sf::Vector2f positionMap)
 void SuperTile::setMapPosition(sf::Vector2f positionMap)
 {
     m_mapOrigin = positionMap;
-    setPosition(sf::Vector2f(  positionMap.x + m_tilePosition.x * getGlobalBounds().width  ,  positionMap.y + m_tilePosition.y * getGlobalBounds().height  ));
+    setPosition(sf::Vector2f(positionMap.x + m_tilePosition.x * getGlobalBounds().width  ,  positionMap.y + m_tilePosition.y * getGlobalBounds().height ));
 }
 void SuperTile::setAutoScaleX(float width, int textureNbrTileX)
 {
@@ -38,11 +38,18 @@ void SuperTile::setAutoScaleX(float width, int textureNbrTileX)
     setScale(sf::Vector2f(tmpScale,tmpScale));
 }
 
+void SuperTile::setCentreOrigin()
+{
+        setOrigin(sf::Vector2f(getOrigin().x+(m_tileSetTexture->getTileSize().x/2),
+        getOrigin().y+(m_tileSetTexture->getTileSize().y/2)));
+}
+
 //Setter
 void SuperTile::autoSetTileTextureRect()
 {
     int i = m_id.x, j = m_id.y;
-    setTextureRect( sf::IntRect ( i * m_tileSetTexture->getTileSize().x , j * m_tileSetTexture->getTileSize().y , m_tileSetTexture->getTileSize().x , m_tileSetTexture->getTileSize().y ));
+    setTextureRect(sf::IntRect ( i * m_tileSetTexture->getTileSize().x , j * m_tileSetTexture->getTileSize().y ,
+                                 m_tileSetTexture->getTileSize().x , m_tileSetTexture->getTileSize().y ));
 }
 void SuperTile::setTileSetTexture(TileSetTexture &tileSetTexture)
 {
@@ -72,7 +79,7 @@ int SuperTile::getTileSetTextureID()
 {
     return m_tileSetTexture->getId();
 }
-sf::Vector2i SuperTile::getTilePositon()
+sf::Vector2i SuperTile::getTilePosition()
 {
     return m_tilePosition;
 }

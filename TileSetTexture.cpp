@@ -22,6 +22,7 @@ void TileSetTexture::initTexture(int id, std::string name, sf::Vector2i tileSize
     loadFromFile(fileAdress);
 }
 
+
 int TileSetTexture::getId()
 {
     return m_id;
