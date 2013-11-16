@@ -33,7 +33,7 @@ class GameMap
         virtual ~GameMap();
     protected:
     private:
-        TileSetTexture m_tileSetTexture[6];
+        TileSetTexture m_tileSetTexture[7];
 
         sf::Vector2i m_mapNbrTile;
         sf::Vector2f m_position;

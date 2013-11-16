@@ -15,6 +15,14 @@ void Decors::info()
 {
     std::cout<<"texture:"<<getTileSetTextureID()<<" tp:"<<getTilePosition().x<<"/"<<getTilePosition().y<<" tId:"<<getId().x<<"/"<<getId().y<<"t:"<<m_name<<" p:"<<getIfPassable()<<std::endl;
 }
+void Decors::draw(sf::RenderWindow *fenetre, sf::Time timeOfDraw)
+{
+
+}
+void Decors::playAnimation(std::string name)
+{
+
+}
 
 std::string Decors::getName()
 {

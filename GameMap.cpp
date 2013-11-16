@@ -8,6 +8,7 @@ GameMap::GameMap()
     m_tileSetTexture[3].initTexture(3, "Monstre", sf::Vector2i(96,96), sf::Vector2i(2,2), "images/TileSet/tileSet96x96Monstre.png");
     m_tileSetTexture[4].initTexture(4, "Meta", sf::Vector2i(96,96), sf::Vector2i(2,2), "images/TileSet/tileSet96x96Meta.png");
     m_tileSetTexture[5].initTexture(5, "PersoAnimation", sf::Vector2i (96,96), sf::Vector2i (1,3), "images/TileSet/SpriteSetAstro.png");
+    m_tileSetTexture[6].initTexture(6, "DoorAnimation", sf::Vector2i (96,96), sf::Vector2i (1,3), "images/Animations/Anim-Door.png");
 }
 
 void GameMap::draw(sf::RenderWindow *fenetre, sf::Time elapseTime)
@@ -20,8 +21,14 @@ void GameMap::draw(sf::RenderWindow *fenetre, sf::Time elapseTime)
         {
             for(int j = 0; j < m_mapNbrTile.y ; j++)
             {
-                fenetre->draw(*m_tabMap[i][j]);
-
+                if(m_tabMap[i][j]->getName() == "PORTE")
+                {
+                    m_tabMap[i][j]->draw(fenetre,elapseTime);
+                }
+                else
+                {
+                    fenetre->draw(*m_tabMap[i][j]);
+                }
             }
         }
         for(int i = 0; i < m_tabMonstre.size(); i++)
@@ -102,7 +109,7 @@ void GameMap::load(std::string nomMap)
                 {
                     if(tmpTileIDx == 0 && tmpTileIDy == 0)
                     {
-                        m_tabMap[i][j] = new Porte(m_tileSetTexture[tmpTextureID],sf::Vector2i(i,j),sf::Vector2i(tmpTileIDx,tmpTileIDy));
+                        m_tabMap[i][j] = new Porte(m_tileSetTexture[6],sf::Vector2i(i,j),sf::Vector2i(tmpTileIDx,tmpTileIDy));
                         m_tabMap[i][j]->setScale(sf::Vector2f(0.5,0.5));
                         m_tabMap[i][j]->setCentreOrigin();
                         m_tabMap[i][j]->setRotation(tmpRotation);
@@ -173,23 +180,51 @@ void GameMap::KeyboardEvent(sf::Event evenement)
 {
     if (evenement.type == sf::Event::KeyPressed)
     {
+        sf::Vector2i tmpDes;
         switch (evenement.key.code)
         {
-            case sf::Keyboard::Z:		m_player->playWalkAnimation();
-                                        m_player->setDestination(sf::Vector2i(0,-1));
+            case sf::Keyboard::Z:		tmpDes = m_player->getNextMove(sf::Vector2i(0,-1));
+                                        if(m_tabMap[tmpDes.x][tmpDes.y]->getIfPassable())
+                                        {
+                                            m_player->playWalkAnimation();
+                                            m_player->setDestination(sf::Vector2i(0,-1));
+                                        }
                                         break;
 
-            case sf::Keyboard::D:       m_player->playWalkAnimation();
-                                        m_player->setDestination(sf::Vector2i(1,0));
+            case sf::Keyboard::D:       tmpDes = m_player->getNextMove(sf::Vector2i(1,0));
+                                        if(m_tabMap[tmpDes.x][tmpDes.y]->getIfPassable())
+                                        {
+                                            m_player->playWalkAnimation();
+                                            m_player->setDestination(sf::Vector2i(1,0));
+                                        }
+                                        else
+                                        {
+                                            if(m_tabMap[tmpDes.x][tmpDes.y]->getName() == "PORTE")
+                                            {
+                                                std::cout<<"PORTE"<<std::endl;
+                                                m_tabMap[tmpDes.x][tmpDes.y]->playAnimation("open");
+                                                m_tabMap[tmpDes.x][tmpDes.y]->setIfPassable(true);
+
+                                            }
+                                        }
                                         break;
 
-            case sf::Keyboard::S:       m_player->playWalkAnimation();
-                                        m_player->setDestination(sf::Vector2i(0,1));
+            case sf::Keyboard::S:       tmpDes = m_player->getNextMove(sf::Vector2i(0,1));
+                                        if(m_tabMap[tmpDes.x][tmpDes.y]->getIfPassable())
+                                        {
+                                            m_player->playWalkAnimation();
+                                            m_player->setDestination(sf::Vector2i(0,1));
+                                        }
                                         break;
 
-            case sf::Keyboard::Q:       m_player->playWalkAnimation();
-                                        m_player->setDestination(sf::Vector2i(-1,0));
+            case sf::Keyboard::Q:       tmpDes = m_player->getNextMove(sf::Vector2i(-1,0));
+                                        if(m_tabMap[tmpDes.x][tmpDes.y]->getIfPassable())
+                                        {
+                                            m_player->playWalkAnimation();
+                                            m_player->setDestination(sf::Vector2i(-1,0));
+                                        }
                                         break;
+
         }
     }
 }

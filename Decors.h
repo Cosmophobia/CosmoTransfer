@@ -15,6 +15,8 @@ class Decors : public Passable
         Decors(TileSetTexture& tileSetTexture, sf::Vector2i tilePosition, sf::Vector2i tileID);
 
         virtual void info();
+        virtual void draw(sf::RenderWindow *fenetre, sf::Time timeOfDraw);
+        virtual void playAnimation(std::string name);
 
         std::string getName();
         void setName(std::string name);

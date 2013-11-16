@@ -19,7 +19,7 @@ int main()
 
     //initialisation fenetre
     sf::RenderWindow *fenetre = new sf::RenderWindow(sf::VideoMode(500,500,32),"Launcher Cosmophobia Concept",sf::Style::Close);
-    fenetre->setFramerateLimit(30);
+    fenetre->setFramerateLimit(60);
 
     // BOUCLE PRINCIPALE
     std::cout<<"Lancement boucle principale -->"<<std::endl;

@@ -24,6 +24,9 @@ class PersonnageJoueur : public Personnage
         //EVENT
         void deplacementPerso(sf::Time tempTime);
 
+        //GETTER
+        sf::Vector2i getNextMove(sf::Vector2i mouvement);
+
         //SETTER
         void setDestination(sf::Vector2i destination);
         void resetDestination();
@@ -32,11 +35,11 @@ class PersonnageJoueur : public Personnage
     protected:
     private:
         sf::Vector2f m_destination;
-        sf::Sprite m_playerSprite;
+
         sf::Time m_lastDraw;
-        TileSetTexture m_spriteTexture;
+
         thor::FrameAnimation m_walking;
-        thor::Animator<sf::Sprite, std::string> pjAnimator;
+        thor::Animator<sf::Sprite, std::string> m_pjAnimator;
 };
 
 #endif // PERSONNAGEJOUEUR_H

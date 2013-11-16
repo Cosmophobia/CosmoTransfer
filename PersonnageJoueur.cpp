@@ -16,7 +16,7 @@ PersonnageJoueur::PersonnageJoueur(TileSetTexture& tileSetTexture, sf::Vector2i 
     m_walking.addFrame(1.f, sf::IntRect(96, 0, 96, 96));
     m_walking.addFrame(1.f, sf::IntRect(192, 0, 96, 96));
 
-	pjAnimator.addAnimation("walking", m_walking, sf::seconds(1.f));
+	m_pjAnimator.addAnimation("walking", m_walking, sf::seconds(1.f));
 }
 
 //SYSTEM
@@ -31,7 +31,7 @@ void PersonnageJoueur::draw(sf::RenderWindow *fenetre, sf::Time timeOfDraw)
 //ANIMATION
 void PersonnageJoueur::playWalkAnimation()
 {
-    pjAnimator.playAnimation("walking",true);
+    m_pjAnimator.playAnimation("walking",true);
 }
 
 //EVENT
@@ -41,14 +41,14 @@ void PersonnageJoueur::deplacementPerso(sf::Time tempTime)
     if(getPosition().x < m_destination.x)
     {
         move(sf::Vector2f(3,0));
-        pjAnimator.update(tempTime);
-        pjAnimator.animate(*this);
+        m_pjAnimator.update(tempTime);
+        m_pjAnimator.animate(*this);
     }
     if(getPosition().y < m_destination.y)
     {
         move(sf::Vector2f(0,3));
-        pjAnimator.update(tempTime);
-        pjAnimator.animate(*this);
+        m_pjAnimator.update(tempTime);
+        m_pjAnimator.animate(*this);
     }
     if(getPosition().x > m_destination.x)
     {
@@ -58,6 +58,13 @@ void PersonnageJoueur::deplacementPerso(sf::Time tempTime)
     {
         move(sf::Vector2f(0,-3));
     }
+}
+
+//GETTER
+sf::Vector2i PersonnageJoueur::getNextMove(sf::Vector2i mouvement)
+{
+    sf::Vector2i tmp = getTilePosition() + mouvement;
+    return tmp;
 }
 
 //SETTER
@@ -72,14 +79,6 @@ void PersonnageJoueur::setDestination(sf::Vector2i destination)
                       " p:"<<getPosition().x<<"/"<<getPosition().y<<
                       " d:"<<m_destination.x<<"/"<<m_destination.y<<std::endl;
     }
-
-    /*
-    if(getPosition() == m_destination)
-    {
-    m_destination = sf::Vector2f(getPosition().x + destination.x * 96 , getPosition().y + destination.y * 96 );
-    std::cout <<"setDestination x = " << m_destination.x << "setDestination y = " << m_destination.y <<std::endl;
-    }
-    */
 }
 void PersonnageJoueur::resetDestination()
 {
