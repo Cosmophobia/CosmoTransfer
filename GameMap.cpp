@@ -88,7 +88,7 @@ void GameMap::load(std::string nomMap)
                 if(tmpTextureID == 0)//TileSet - MUR
                 {
                     m_tabMap[i][j] = new Mur(m_tileSetTexture[tmpTextureID],sf::Vector2i(i,j),sf::Vector2i(tmpTileIDx,tmpTileIDy));
-                    m_tabMap[i][j]->setScale(sf::Vector2f(0.5,0.5));
+                    m_tabMap[i][j]->setScale(sf::Vector2f(1,1));
                     m_tabMap[i][j]->setCentreOrigin();
                     m_tabMap[i][j]->setRotation(tmpRotation);
                     m_tabMap[i][j]->setMapPosition(m_position);
@@ -98,7 +98,7 @@ void GameMap::load(std::string nomMap)
                 if(tmpTextureID == 1)//TileSet - SOL
                 {
                     m_tabMap[i][j] = new Sol(m_tileSetTexture[tmpTextureID],sf::Vector2i(i,j),sf::Vector2i(tmpTileIDx,tmpTileIDy));
-                    m_tabMap[i][j]->setScale(sf::Vector2f(0.5,0.5));
+                    m_tabMap[i][j]->setScale(sf::Vector2f(1,1));
                     m_tabMap[i][j]->setCentreOrigin();
                     m_tabMap[i][j]->setRotation(tmpRotation);
                     m_tabMap[i][j]->setMapPosition(m_position);
@@ -110,7 +110,7 @@ void GameMap::load(std::string nomMap)
                     if(tmpTileIDx == 0 && tmpTileIDy == 0)
                     {
                         m_tabMap[i][j] = new Porte(m_tileSetTexture[6],sf::Vector2i(i,j),sf::Vector2i(tmpTileIDx,tmpTileIDy));
-                        m_tabMap[i][j]->setScale(sf::Vector2f(0.5,0.5));
+                        m_tabMap[i][j]->setScale(sf::Vector2f(1,1));
                         m_tabMap[i][j]->setCentreOrigin();
                         m_tabMap[i][j]->setRotation(tmpRotation);
                         m_tabMap[i][j]->setMapPosition(m_position);
@@ -139,7 +139,7 @@ void GameMap::load(std::string nomMap)
           m_tabMonstre.push_back(new Monstre(m_tileSetTexture[tmpTextureID],sf::Vector2i(tmpTilePositionX,tmpTilePositionY),sf::Vector2i(tmpTileIDx,tmpTileIDy)));
 
           int tmp = m_tabMonstre.size();
-          m_tabMonstre[tmp-1]->setScale(sf::Vector2f(0.5,0.5));
+          m_tabMonstre[tmp-1]->setScale(sf::Vector2f(1,1));
           m_tabMonstre[tmp-1]->setCentreOrigin();
           m_tabMonstre[tmp-1]->setMapPosition(m_position);
           m_tabMonstre[tmp-1]->setRotation(tmpRotation);
@@ -159,7 +159,7 @@ void GameMap::load(std::string nomMap)
 
       //Creation PersonnageJoueur
       m_player = new PersonnageJoueur(m_tileSetTexture[5],sf::Vector2i(tmpTilePositionX,tmpTilePositionY),sf::Vector2i(tmpTileIDx,tmpTileIDy));
-      m_player->setScale(sf::Vector2f(0.5,0.5));
+      m_player->setScale(sf::Vector2f(1,-1));
       m_player->setCentreOrigin();
       m_player->setMapPosition(m_position);
 
@@ -254,5 +254,24 @@ void GameMap::setMapPosition(sf::Vector2f mapPosition)
 //DESTRUCTEUR
 GameMap::~GameMap()
 {
-    //dtor
+        for(int i = 0; i < m_mapNbrTile.x ; i++ )
+        {
+            for(int j = 0; j < m_mapNbrTile.y ; j++)
+            {
+
+                delete m_tabMap[i][j];
+                m_tabMap[i][j] = 0;
+            }
+        }
+        for(int i = 0; i < m_tabMonstre.size(); i++)
+        {
+            if(m_tabMonstre[i] != 0)
+            {
+                delete m_tabMonstre[i];
+                m_tabMonstre[i] = 0;
+            }
+
+        }
+        delete m_player;
+        m_player = 0;
 }

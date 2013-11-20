@@ -7,7 +7,7 @@
 #include <sstream>
 #include <string>
 #include "GameMap.h"
-#include "PersoJoueur.h"
+
 
 
 class GameScreen

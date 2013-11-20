@@ -132,7 +132,7 @@ int main()
                     while (fenetre->pollEvent(evenement))
                     {
                         //evenement CLOSE
-                        if (evenement.type == sf::Event::Closed)
+                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
                         {
                             std::cout<<"Close to launcher"<<std::endl;
                             gameState = "LAUNCHER";

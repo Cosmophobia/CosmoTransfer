@@ -3,17 +3,19 @@
 GameScreen::GameScreen(sf::RenderWindow *fenetre)
 {
     // CREER FENETRE AVEC FOND
-    std::cout<<"In GAME"<<std::endl;
+    std::cout<<"IN : GameScreen"<<std::endl;
     m_fenetreGame = fenetre;
 
     if(!m_textureFondGame.loadFromFile("images/FondGame.png"))
     {
         std::cout<<"Erreur lors du chargement de l'image"<<std::endl;
     }
-    m_fenetreGame->create(sf::VideoMode(1024,768,32),"Cosmophobia Game",sf::Style::Close);
+
+    m_fenetreGame->create(sf::VideoMode(1440,900,32),"Cosmophobia Game",sf::Style::Close);
     m_imgFondGame.setTexture(m_textureFondGame);
     m_imgFondGame.setPosition(0,0);
-    m_imgFondGame.setTextureRect(sf::IntRect(0,0,1024,768));
+    m_imgFondGame.setTextureRect(sf::IntRect(0,0,1440,900));
+
     std::cout<<"texture done"<<std::endl;
 
     // CREER MAP
@@ -21,9 +23,6 @@ GameScreen::GameScreen(sf::RenderWindow *fenetre)
 
     m_gameMap.load("testMap");
     m_gameMap.setMapPosition(sf::Vector2f (150,150));
-
-    //COSMONAUTE
-  //  m_cosmonaute.setCentreOrigin();
 }
 
 
